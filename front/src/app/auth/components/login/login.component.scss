@@ -3,3 +3,18 @@
   text-align: center;
   padding: 0.5rem 1rem;
 }
+
+
+.login-form {
+  div {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    input {
+      width: 100%;
+    }
+  }
+
+  .signup-hint {
+    margin-top: 2rem;
+  }
+}

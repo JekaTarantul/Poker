@@ -5,6 +5,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { LoginComponent } from './components/login/login.component';
 import {RouterModule, Routes} from "@angular/router";
 import {InputTextModule} from "primeng/inputtext";
+import {ButtonModule} from "primeng/button";
 
 
 const routes: Routes = [
@@ -23,7 +24,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    InputTextModule
+    InputTextModule,
+    ButtonModule
   ]
 })
 export class AuthModule { }
