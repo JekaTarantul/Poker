@@ -1,24 +1,50 @@
 const defaultDeck: string[] = [
-    '2C', '2D', '2H', '2S',
-    '3C', '3D', '3H', '3S',
-    '4C', '4D', '4H', '4S',
-    '5C', '5D', '5H', '5S',
-    '6C', '6D', '6H', '6S',
-    '7C', '7D', '7H', '7S',
-    '8C', '8D', '8H', '8S',
-    '9C', '9D', '9H', '9S',
-    '10C', '10D', '10H', '10S',
-    'JC', 'JD', 'JH', 'JS',
-    'QC', 'QD', 'QH', 'QS',
-    'KC', 'KD', 'KH', 'KS',
-    'AC', 'AD', 'AH', 'AS'
+    '2♠', '2♣', '2♥', '2♦',
+    '3♠', '3♣', '3♥', '3♦',
+    '4♠', '4♣', '4♥', '4♦',
+    '5♠', '5♣', '5♥', '5♦',
+    '6♠', '6♣', '6♥', '6♦',
+    '7♠', '7♣', '7♥', '7♦',
+    '8♠', '8♣', '8♥', '8♦',
+    '9♠', '9♣', '9♥', '9♦',
+    '10♠', '10♣', '10♥', '10♦',
+    'J♠', 'J♣', 'J♥', 'J♦',
+    'Q♠', 'Q♣', 'Q♥', 'Q♦',
+    'K♠', 'K♣', 'K♥', 'K♦',
+    'A♠', 'A♣', 'A♥', 'A♦'
 ];
-
 
 export class Deck {
   getDeck() {
     return [...defaultDeck];
   }
 
-  getRandomCarts(cardCount: number): string[] {}
+  getRandomCards(cardCount: number): string[] {
+    const seenIndexes = new Set<number>();
+
+    const deck = this.getDeck();
+    const result = [];
+
+    cardCount = this.validateCardCount(cardCount, deck.length);
+
+    while (result.length < cardCount) {
+      const index = Math.floor(Math.random() * deck.length);
+
+      if (!seenIndexes.has(index)) {
+        seenIndexes.add(index);
+
+        result.push(deck[index]);
+      }
+    }
+
+    return result;
+  }
+
+  private validateCardCount(cardCount: number, deckLength: number): number {
+      if (cardCount > deckLength) {
+          return deckLength;
+      }
+
+      return cardCount;
+  }
 }
