@@ -2,10 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
+import { Room } from '../../room/entities/room.entity';
 
 @Entity()
 export class User {
@@ -16,16 +21,20 @@ export class User {
   @IsNotEmpty()
   username: string;
 
-  @Column()
+  @Column({ select: false })
   @IsNotEmpty()
   password: string;
 
   @Column()
   balance: number;
 
-  @CreateDateColumn()
+  @ManyToMany(() => Room, (room) => room.id)
+  @JoinTable()
+  rooms: Room[];
+
+  @CreateDateColumn({ select: false })
   createdAt: string;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updatedAt: string;
 }
