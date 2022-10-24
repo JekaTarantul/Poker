@@ -1,14 +1,13 @@
 import {
+  BadRequestException,
   Body,
-  Request,
   Controller,
   Post,
   UseGuards,
-  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { User } from '../entities/user.entity';
+import { LocalAuthGuard } from '../local-auth.guard';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -21,10 +20,10 @@ export class AuthController {
     } catch (e) {
       throw new BadRequestException('Username is already taken');
     }
-    return this.usersService.login(user);
+    return true;
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Body() user: User) {
     return this.usersService.login(user);

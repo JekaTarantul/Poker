@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -21,9 +21,7 @@ export class AuthService {
   }
 
   async validateUser(username: string, password: string): Promise<any> {
-    const foundUser = await this.userRepository.findOne({
-      where: { username },
-    });
+    const foundUser = await this.userRepository.findOneBy({ username });
     if (foundUser) {
       if (await bcrypt.compare(password, foundUser.password)) {
         const { password, ...result } = foundUser;

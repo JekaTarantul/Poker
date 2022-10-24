@@ -1,15 +1,12 @@
 import {
   Controller,
-  Post,
-  UseGuards,
-  Request,
-  Body,
-  Param,
   Get,
+  Param,
+  Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
-import { LocalAuthGuard } from '../../auth/local-auth.guard';
 import { RoomService } from '../services/room.service';
-import { JwtStrategy } from '../../auth/jwt-strategy';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)

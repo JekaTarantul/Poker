@@ -21,7 +21,7 @@ export class User {
   @IsNotEmpty()
   username: string;
 
-  @Column({ select: false })
+  @Column()
   @IsNotEmpty()
   password: string;
 
