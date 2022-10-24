@@ -6,12 +6,14 @@ import { LoginComponent } from './components/login/login.component';
 import {RouterModule, Routes} from "@angular/router";
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 const routes: Routes = [
   { path: '', component: AuthComponent, children: [
       { path: 'login', component: LoginComponent },
-      { path: 'signup', component: SignupComponent }
+      { path: 'signup', component: SignupComponent },
+      { path: '**', redirectTo: 'login'}
     ] },
 ]
 
@@ -25,7 +27,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    ReactiveFormsModule
   ]
 })
 export class AuthModule { }

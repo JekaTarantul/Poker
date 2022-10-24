@@ -1,16 +1,18 @@
 <div class="p-card login-container">
   <h2>Log in</h2>
-  <div class="form login-form">
-    <div>
-      <input pInputText placeholder="Your nickname">
-    </div>
-    <div>
-      <input pInputText type="password" placeholder="Your password">
-    </div>
-    <button pButton>Log in</button>
-    <div class="signup-hint">
-      <span>Don't have an account? <a routerLink="../signup">Sign up!</a></span>
+  <form [formGroup]="loginForm">
+    <div class="form login-form">
+      <div>
+        <input formControlName="login" pInputText placeholder="Your nickname">
+      </div>
+      <div>
+        <input formControlName="password" pInputText type="password" placeholder="Your password">
+      </div>
+      <input type="submit" (submit)="onLogin()" [disabled]="!loginForm.valid" pButton>
+      <div class="signup-hint">
+        <span>Don't have an account? <a routerLink="../signup">Sign up!</a></span>
 
+      </div>
     </div>
-  </div>
+  </form>
 </div>

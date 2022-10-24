@@ -22,11 +22,7 @@ import { JwtStrategy } from './auth/jwt-strategy';
   controllers: [AppController],
   providers: [
     AppService,
-    JwtStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    JwtStrategy
   ],
 })
 export class AppModule {}
