@@ -7,6 +7,8 @@ import {RouterModule, Routes} from "@angular/router";
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {ReactiveFormsModule} from "@angular/forms";
+import {AuthService} from "./services/auth.service";
+import {HttpClient} from "@angular/common/http";
 
 
 const routes: Routes = [
@@ -28,7 +30,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     InputTextModule,
     ButtonModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
 export class AuthModule { }

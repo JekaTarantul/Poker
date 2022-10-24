@@ -1,19 +1,26 @@
 <div class="p-card signup-container">
   <h2>Sign up</h2>
-  <div class="form signup-form">
-    <div>
-      <input pInputText placeholder="Your nickname">
-    </div>
-    <div>
-      <input pInputText type="password" placeholder="Your password">
-    </div>
-    <div>
-      <input pInputText type="password" placeholder="Repeat password">
-    </div>
-    <button pButton>Sign up</button>
-    <div class="login-hint">
-      <span>Have an account? <a routerLink="../login">Log in!</a></span>
 
+  <form [formGroup]="signupForm">
+    <div class="form signup-form">
+
+      <div>
+        <input formControlName="username" pInputText placeholder="Your nickname">
+      </div>
+
+      <div>
+        <input formControlName="password" pInputText type="password" placeholder="Your password">
+      </div>
+
+      <div>
+        <input formControlName="repeatPassword" pInputText type="password" placeholder="Repeat password">
+      </div>
+
+      <input pButton type="submit" (click)="onSignup()" [disabled]="signupForm.invalid">
+
+      <div class="login-hint">
+        <span>Have an account? <a routerLink="../login">Log in!</a></span>
+      </div>
     </div>
-  </div>
+  </form>
 </div>

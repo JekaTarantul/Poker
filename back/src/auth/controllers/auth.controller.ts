@@ -15,18 +15,18 @@ export class AuthController {
   constructor(private usersService: AuthService) {}
 
   @Post('signup')
-  async signup(@Body() user: User): Promise<boolean> {
+  async signup(@Body() user: User) {
     try {
       const newUser = await this.usersService.createNewUser(user);
     } catch (e) {
       throw new BadRequestException('Username is already taken');
     }
-    return true;
+    return this.usersService.login(user);
   }
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Body() user: Partial<User>) {
+  async login(@Body() user: User) {
     return this.usersService.login(user);
   }
 }

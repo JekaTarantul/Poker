@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
     const devAccoutPassword = 'privet123';
 
     this.loginForm = new FormGroup<any>({
-      login: new FormControl(isDevMode() ? devAccountLogin : ''),
+      username: new FormControl(isDevMode() ? devAccountLogin : ''),
       password: new FormControl(isDevMode() ? devAccoutPassword : '')
     })
   }
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   onLogin() {
     const loginData = this.loginForm.value;
 
+    console.log(loginData)
     this.authService.login(loginData).subscribe(
       data => console.log(data)
     );
