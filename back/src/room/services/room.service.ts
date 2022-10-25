@@ -23,6 +23,12 @@ export class RoomService {
     return room.code;
   }
 
+  async getRooms(count = 50) {
+    const rooms = await this.roomRepository.find({ take: count });
+
+    return rooms;
+  }
+
   async getRoom(code: number) {
     const room = await this.roomRepository.findOne({
       where: { code },

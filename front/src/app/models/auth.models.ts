@@ -6,3 +6,7 @@ export interface LoginModel {
 export interface SignupModel extends LoginModel {
   nickname: string
 }
+
+export type AuthToken = {
+  access_token: string
+}

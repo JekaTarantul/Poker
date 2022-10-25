@@ -1,6 +1,7 @@
 import {Component, isDevMode, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,10 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+    ) {
     const devAccountLogin = 'JekaTarantul';
     const devAccoutPassword = 'privet123';
 
@@ -28,9 +32,11 @@ export class LoginComponent implements OnInit {
   onLogin() {
     const loginData = this.loginForm.value;
 
-    console.log(loginData)
     this.authService.login(loginData).subscribe(
-      data => console.log(data)
+      token => {
+        this.authService.setToken(token);
+        this.router.navigate(['rooms'])
+      }
     );
   }
 

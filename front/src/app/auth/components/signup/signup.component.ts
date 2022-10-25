@@ -3,6 +3,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Valid
 import {AuthService} from "../../services/auth.service";
 import {environment} from "../../../../environments/environment";
 import {SignupModel} from "../../../models/auth.models";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-signup',
@@ -13,10 +14,12 @@ export class SignupComponent implements OnInit {
 
   signupForm: FormGroup;
 
-  constructor(private fBuilder: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fBuilder: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.signupForm = this.fBuilder.group({
-      // password: new FormControl( '', [Validators.required]),
-      // repeatPassword: new FormControl('', [Validators.required, this.passwordConfirming]),
       username: this.fBuilder.control('', [Validators.required]),
       password: ['', [Validators.required]],
       repeatPassword: ['', [Validators.required]],
@@ -27,7 +30,10 @@ export class SignupComponent implements OnInit {
     const signupData = this.signupForm.value;
 
     this.authService.signup({...signupData, repeatPassword: null}).subscribe(
-      data => console.log(data)
+      token => {
+        this.authService.setToken(token)
+        this.router.navigate(['rooms'])
+      }
     )
   }
 

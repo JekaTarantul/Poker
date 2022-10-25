@@ -14,6 +14,11 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 export class RoomController {
   constructor(private roomService: RoomService) {}
 
+  @Get('/rooms')
+  getRooms(@Request() req) {
+    return this.roomService.getRooms();
+  }
+
   @Get(`/:code`)
   getRoom(@Param() code: { code: number }) {
     return this.roomService.getRoom(code.code);
