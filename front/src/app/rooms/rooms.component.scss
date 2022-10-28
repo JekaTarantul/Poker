@@ -1,0 +1,19 @@
+:host {
+  ::ng-deep .p-card_custom {
+    width: 250px;
+
+    &:hover {
+      cursor: pointer;
+
+      // poka ebet delat` podderjku cvetov
+      background: #A1C971;
+    }
+  }
+}
+
+.card-container {
+  padding: 40px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

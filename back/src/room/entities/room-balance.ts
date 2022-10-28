@@ -9,17 +9,16 @@ import {
 } from 'typeorm';
 import { User } from '../../auth/entities/user.entity';
 import { JoinTable } from 'typeorm';
-import { RoomUserEntity } from "./room-user.entity";
 
 @Entity()
-export class Room {
+export class RoomBalance {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  code: number;
-
-  @OneToMany(() => RoomUserEntity, (roomUser) => roomUser.room, {cascade: true})
-  @JoinColumn()
-  roomUsers: RoomUserEntity[];
+  // @Column({ unique: true })
+  // code: number;
+  //
+  // @ManyToMany(() => User, (item) => item.id)
+  // @JoinTable()
+  // users: User[];
 }

@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { RoomService } from '../services/room.service';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { Room } from '../entities/room.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/v1/room')
@@ -16,12 +17,9 @@ export class RoomController {
 
   @Get('/rooms')
   getRooms(@Request() req) {
-    return this.roomService.getRooms();
-  }
+    const rooms: Room[] = this.roomService.getRooms() as unknown as Room[];
 
-  @Get(`/:code`)
-  getRoom(@Param() code: { code: number }) {
-    return this.roomService.getRoom(code.code);
+    return rooms;
   }
 
   @Post('create')
@@ -38,4 +36,10 @@ export class RoomController {
   async leave(@Param() code: { code: number }, @Request() req) {
     return this.roomService.leaveRoom(code.code, req.user);
   }
+
+  @Get(`/:code`)
+  getRoom(@Param() code: { code: number }) {
+    return this.roomService.getRoom(code.code);
+  }
+
 }

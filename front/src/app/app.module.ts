@@ -7,6 +7,8 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 import { RoomsComponent } from './rooms/rooms.component';
 import {RouterModule} from "@angular/router";
+import {CardModule} from "primeng/card";
+import { TableComponent } from './table/table.component';
 
 @NgModule({
   declarations: [

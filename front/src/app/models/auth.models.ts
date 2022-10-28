@@ -10,3 +10,4 @@ export interface SignupModel extends LoginModel {
 export type AuthToken = {
   access_token: string
 }
+export type Room = { id: number, code: string };

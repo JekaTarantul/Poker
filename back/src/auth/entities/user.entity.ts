@@ -5,12 +5,13 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  ManyToOne, OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  UpdateDateColumn
+} from "typeorm";
 import { IsNotEmpty } from 'class-validator';
 import { Room } from '../../room/entities/room.entity';
+import { RoomUserEntity } from "../../room/entities/room-user.entity";
 
 @Entity()
 export class User {
@@ -28,9 +29,9 @@ export class User {
   @Column()
   balance: number;
 
-  @ManyToMany(() => Room, (room) => room.id)
-  @JoinTable()
-  rooms: Room[];
+  @OneToMany(() => RoomUserEntity, (room) => room.id)
+  @JoinColumn()
+  rooms: RoomUserEntity[];
 
   @CreateDateColumn({ select: false })
   createdAt: string;

@@ -4,26 +4,22 @@ import {RouterModule, Routes} from "@angular/router";
 import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from "primeng/button";
 import {ReactiveFormsModule} from "@angular/forms";
-import {RoomsComponent} from "./rooms.component";
 import {CardModule} from "primeng/card";
+import {TableComponent} from "./table.component";
 
 
 const routes: Routes = [
-  { path: '', component: RoomsComponent},
+  { path: '', component: TableComponent},
   { path: '**', redirectTo: ''}
 ]
 
 @NgModule({
   declarations: [
-    RoomsComponent
+    TableComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    InputTextModule,
-    ButtonModule,
-    ReactiveFormsModule,
-    CardModule
   ],
 })
-export class RoomsModule { }
+export class TableModule { }

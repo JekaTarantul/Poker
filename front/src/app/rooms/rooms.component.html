@@ -1,1 +1,8 @@
-<p>rooms works!</p>
+<ng-container *ngIf="rooms.length">
+  <div class="card-container">
+    <p-card *ngFor="let room of rooms" [styleClass]="'p-card_custom'" (click)="joinRoom(room)">
+      {{room.code}}
+    </p-card>
+  </div>
+
+</ng-container>

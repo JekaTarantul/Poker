@@ -4,21 +4,26 @@ import { Room } from '../entities/room.entity';
 import { Repository } from 'typeorm';
 import { User } from '../../auth/entities/user.entity';
 import * as crypto from 'crypto';
+import { RoomUserEntity } from '../entities/room-user.entity';
 
 @Injectable()
 export class RoomService {
   constructor(
     @InjectRepository(Room) private roomRepository: Repository<Room>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(RoomUserEntity) private URRepository: Repository<RoomUserEntity>,
   ) {}
 
-  async createRoom({ id }: User) {
+  async createRoom({ username }: User) {
     const code = await this.generateCode();
-    const user = await this.userRepository.findOneBy({ id });
+    const defaultRoomBalance = 100;
+    const user = await this.userRepository.findOneBy({ username });
     const room = await this.roomRepository.create({
       code,
-      users: [user],
+      roomUsers: [{ user: user, balance: defaultRoomBalance }, { user: user, balance: defaultRoomBalance }],
     });
+    console.log(room)
+
     await this.roomRepository.save(room);
     return room.code;
   }
@@ -32,30 +37,44 @@ export class RoomService {
   async getRoom(code: number) {
     const room = await this.roomRepository.findOne({
       where: { code },
-      relations: ['users'],
+      relations: ['roomUsers', 'roomUsers.user', 'roomUsers.room'],
     });
     return room;
   }
 
-  async joinRoom(code: number, { id }: User) {
-    const room = await this.roomRepository.findOne({ where: { code } });
-    if (!room) {
-      throw new NotFoundException(`This room doesn't exist`);
-    }
-    const user = await this.userRepository.findOneBy({ id });
-    room.users.push(user);
-    await this.roomRepository.update({ id: room.id }, room);
+  async joinRoom(code: number, { username }: User): Promise<Room> {
+    const defaultRoomBalance = 100;
+    const room = await this.roomRepository.findOne({
+      where: { code },
+      relations: ['users'],
+    });
+
+    // if (!room) {
+    //   throw new NotFoundException(`This room doesn't exist`);
+    // }
+    //
+    // const user = await this.userRepository.findOneBy({ username });
+    //
+    // if (
+    //   !room.roomUsers.find((roomUser) => roomUser.user.username === username)
+    // ) {
+    //   room.roomUsers.push({ user, balance: defaultRoomBalance });
+    //
+    //   await this.roomRepository.save(room);
+    // }
+
+    return room;
   }
 
   async leaveRoom(code: number, user: User) {
-    const room = await this.roomRepository.findOne({ where: { code } });
+    const room: Room = await this.roomRepository.findOne({ where: { code } });
+
     if (!room) {
       throw new NotFoundException(`This room doesn't exist`);
     }
-    room.users = room.users.filter((_user) => _user.id !== user.id);
-    if (!room.users.length) {
-      return this.roomRepository.delete(room);
-    }
+
+    room.roomUsers = room.roomUsers.filter((_user) => _user.id !== user.id);
+
     return this.roomRepository.update({ id: room.id }, room);
   }
 
