@@ -15,12 +15,13 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() user: User) {
+    let newUser;
     try {
-      const newUser = await this.usersService.createNewUser(user);
+      newUser = await this.usersService.createNewUser(user);
     } catch (e) {
       throw new BadRequestException('Username is already taken');
     }
-    return true;
+    return newUser;
   }
 
   @UseGuards(LocalAuthGuard)

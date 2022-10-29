@@ -17,7 +17,20 @@ export class RoomsComponent implements OnInit {
     this.roomsService.getRooms().subscribe(data => this.rooms = data);
   }
 
-  joinRoom(room: Room): void {
-    this.router.navigate(['/table'], {queryParams: {code: room.code}});
+  openRoom(room: Room): void {
+    this.navigateToRoom(room.code);
+  }
+
+  createRoom(): void {
+    this.roomsService.createRoom().subscribe(
+      room => {
+        this.navigateToRoom(room.code)
+      },
+      er => console.log(er)
+    );
+  }
+
+  private navigateToRoom(code: string): void {
+    this.router.navigate(['/table'], {queryParams: {code}});
   }
 }

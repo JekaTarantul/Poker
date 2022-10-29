@@ -5,7 +5,6 @@
     &:hover {
       cursor: pointer;
 
-      // poka ebet delat` podderjku cvetov
       background: #A1C971;
     }
   }
@@ -16,4 +15,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.create-room_wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 30px
 }

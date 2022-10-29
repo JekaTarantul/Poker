@@ -7,8 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from '../../auth/entities/user.entity';
-import { JoinTable } from 'typeorm';
+
 import { RoomUserEntity } from "./room-user.entity";
 
 @Entity()
@@ -22,4 +21,7 @@ export class Room {
   @OneToMany(() => RoomUserEntity, (roomUser) => roomUser.room, {cascade: true})
   @JoinColumn()
   roomUsers: RoomUserEntity[];
+
+  @Column()
+  roomCreatorName: string
 }

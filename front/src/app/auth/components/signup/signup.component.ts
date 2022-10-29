@@ -4,6 +4,7 @@ import {AuthService} from "../../services/auth.service";
 import {environment} from "../../../../environments/environment";
 import {SignupModel} from "../../../models/auth.models";
 import {Router} from "@angular/router";
+import {switchMap, tap} from "rxjs";
 
 @Component({
   selector: 'app-signup',
@@ -29,12 +30,19 @@ export class SignupComponent implements OnInit {
   onSignup() {
     const signupData = this.signupForm.value;
 
-    this.authService.signup({...signupData, repeatPassword: null}).subscribe(
-      token => {
-        this.authService.setToken(token)
-        this.router.navigate(['rooms'])
-      }
-    )
+    this.authService.signup({...signupData, repeatPassword: null})
+      .pipe(
+        tap(token => this.authService.setToken(token)),
+        switchMap(() => this.authService.getUser())
+      )
+      .subscribe(
+        data => {
+          console.warn(data)
+          this.authService.setUserData(data)
+          console.log('currentUser:', this.authService.currentUser)
+          this.router.navigate(['rooms'])
+        }
+      )
   }
 
 

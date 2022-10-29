@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from '../entities/room.entity';
 import { Repository } from 'typeorm';
@@ -11,7 +11,7 @@ export class RoomService {
   constructor(
     @InjectRepository(Room) private roomRepository: Repository<Room>,
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(RoomUserEntity) private URRepository: Repository<RoomUserEntity>,
+    @InjectRepository(RoomUserEntity) private RURepository: Repository<RoomUserEntity>,
   ) {}
 
   async createRoom({ username }: User) {
@@ -20,12 +20,12 @@ export class RoomService {
     const user = await this.userRepository.findOneBy({ username });
     const room = await this.roomRepository.create({
       code,
-      roomUsers: [{ user: user, balance: defaultRoomBalance }, { user: user, balance: defaultRoomBalance }],
+      roomUsers: [{ user: user, balance: defaultRoomBalance }],
+      roomCreatorName: username,
     });
-    console.log(room)
 
     await this.roomRepository.save(room);
-    return room.code;
+    return room;
   }
 
   async getRooms(count = 50) {
@@ -42,28 +42,33 @@ export class RoomService {
     return room;
   }
 
-  async joinRoom(code: number, { username }: User): Promise<Room> {
+  async joinRoom(code: number, userToJoin: User): Promise<Room> {
     const defaultRoomBalance = 100;
-    const room = await this.roomRepository.findOne({
-      where: { code },
-      relations: ['users'],
+    const room = await this.getRoom(code);
+
+    if (!room) {
+      throw new NotFoundException(`This room doesn't exist`);
+    }
+
+    const user = await this.userRepository.findOneBy({ username: userToJoin.username });
+
+    const isUserInRoom: boolean = !!room.roomUsers.find((roomUser) => roomUser.user.username === userToJoin.username)
+
+    if (isUserInRoom) {
+      throw new BadRequestException('User already in the room');
+    }
+
+    const roomUser = this.RURepository.create({
+      user,
+      room,
+      balance: defaultRoomBalance,
     });
 
-    // if (!room) {
-    //   throw new NotFoundException(`This room doesn't exist`);
-    // }
-    //
-    // const user = await this.userRepository.findOneBy({ username });
-    //
-    // if (
-    //   !room.roomUsers.find((roomUser) => roomUser.user.username === username)
-    // ) {
-    //   room.roomUsers.push({ user, balance: defaultRoomBalance });
-    //
-    //   await this.roomRepository.save(room);
-    // }
+    room.roomUsers.push(roomUser);
 
-    return room;
+    await this.roomRepository.save(room);
+
+    return this.getRoom(code);
   }
 
   async leaveRoom(code: number, user: User) {

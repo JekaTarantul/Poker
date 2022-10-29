@@ -11,4 +11,12 @@ export class RoomsService {
   getRooms(): Observable<any> {
     return this.http.get(environment.API_URL + 'room/rooms', {});
   }
+
+  getRoom(code: string): Observable<any> {
+    return this.http.get(environment.API_URL + 'room/' + code);
+  }
+
+  createRoom(): Observable<any> {
+    return this.http.post(environment.API_URL + 'room/create', {})
+  }
 }

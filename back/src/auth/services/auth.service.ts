@@ -12,12 +12,14 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
 
-  async createNewUser(user: User): Promise<User> {
+  async createNewUser(user: User) {
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(user.password, salt);
     user.password = hash;
     user.balance = 0;
-    return await this.userRepository.save(user);
+    await this.userRepository.save(user);
+
+    return await this.login(user);
   }
 
   async validateUser(username: string, password: string): Promise<any> {
@@ -32,6 +34,7 @@ export class AuthService {
     }
     return null;
   }
+
 
   async login(user: Partial<User>) {
     const payload = { username: user.username, sub: user.id };
