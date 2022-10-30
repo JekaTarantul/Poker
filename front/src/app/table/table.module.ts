@@ -6,6 +6,7 @@ import {ButtonModule} from "primeng/button";
 import {ReactiveFormsModule} from "@angular/forms";
 import {CardModule} from "primeng/card";
 import {TableComponent} from "./table.component";
+import {TableUserComponent} from "./components/table-user/table-user.component";
 
 
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    TableComponent
+    TableComponent,
+    TableUserComponent,
   ],
   imports: [
     CommonModule,

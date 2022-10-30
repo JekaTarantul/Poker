@@ -1,0 +1,17 @@
+<ng-container *ngIf="roomUser">
+
+  <div class="profile-wrapper">
+    <div class="img-wrapper">
+      <img src="{{profilePic}}" width="75px" height="75px" style="border-radius: 50%">
+    </div>
+
+    <div class="profile-nickname">
+      {{roomUser.user.username}}
+    </div>
+
+    <div class="profile_current-bank">
+      {{roomUser.balance}}
+    </div>
+  </div>
+
+</ng-container>

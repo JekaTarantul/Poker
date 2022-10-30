@@ -9,6 +9,7 @@ import { RoomsComponent } from './rooms/rooms.component';
 import {RouterModule} from "@angular/router";
 import {CardModule} from "primeng/card";
 import { TableComponent } from './table/table.component';
+import { TableUserComponent } from './table/components/table-user/table-user.component';
 
 @NgModule({
   declarations: [
