@@ -52,7 +52,6 @@ export class TableComponent implements OnInit, OnDestroy {
     // всегда садим вниз поцентру, потом надо будет написать метод, который обновляет массив юезров таким образом
     // чтоб игрок всегда был нулевым в масиве. либо же на беке это сделать
 
-    const currentUserPlacement = map.set(roomUsers[0].id, {x: this.tableSizes.width / 2, y: this.tableSizes.height});
 
     const leftCenter = {x: padding, y: this.tableSizes.height / 2};
     const topCenter = {x: this.tableSizes.width / 2, y: padding};
@@ -63,6 +62,9 @@ export class TableComponent implements OnInit, OnDestroy {
     const topQuartRight = {x: this.tableSizes.width / 4 * 3, y: padding}
     const bottomRight = {x: this.tableSizes.width - padding, y: this.tableSizes.height - padding};
     const leftBottom =  {x: 0 + padding, y: this.tableSizes.height - padding};
+    const bottomCenter = {x: this.tableSizes.width / 2, y: this.tableSizes.height - padding};
+
+    const currentUserPlacement = map.set(roomUsers[0].id, bottomCenter);
 
     if (roomUsers.length === 2) {
       map.set(roomUsers[1].id, topCenter)

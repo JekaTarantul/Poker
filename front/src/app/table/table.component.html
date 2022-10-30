@@ -1,20 +1,22 @@
 <p>{{tableId}}</p>
 
-<div class="table-container">
-  <img src="assets/table.jpg" [width]="tableSizes.width" [height]="tableSizes.height">
+<div class="table-wrapper">
+  <div class="table-container">
+    <img src="assets/table.jpg" [width]="tableSizes.width" [height]="tableSizes.height">
 
-  <ng-container *ngIf="tableData?.roomUsers">
-    <ng-container *ngFor="let tableUser of tableData.roomUsers;">
+    <ng-container *ngIf="tableData?.roomUsers">
+      <ng-container *ngFor="let tableUser of tableData.roomUsers;">
 
       <span class="table-user-wrapper" [ngStyle]="{
         'left' : userPlacements.get(tableUser.id).x + 'px',
-        'top' : userPlacements.get(tableUser.id).y + 'px',
-        'background': 'red'
+        'top' : userPlacements.get(tableUser.id).y + 'px'
       }">
-        <app-table-user>
+        <app-table-user [roomUser]="tableUser">
         </app-table-user>
       </span>
 
+      </ng-container>
     </ng-container>
-  </ng-container>
+  </div>
+
 </div>
