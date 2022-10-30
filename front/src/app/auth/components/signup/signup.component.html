@@ -16,7 +16,7 @@
         <input formControlName="repeatPassword" pInputText type="password" placeholder="Repeat password">
       </div>
 
-      <input pButton type="submit" (click)="onSignup()" [disabled]="signupForm.invalid">
+      <button pButton type="submit" (click)="onSignup()" [disabled]="signupForm.invalid" label="Sign up"></button>
 
       <div class="login-hint">
         <span>Have an account? <a routerLink="../login">Log in!</a></span>

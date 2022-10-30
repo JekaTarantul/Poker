@@ -1,4 +1,4 @@
-import {Component, isDevMode, OnInit} from '@angular/core';
+import {Component, HostBinding, HostListener, isDevMode, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
@@ -30,9 +30,17 @@ export class LoginComponent implements OnInit {
 
   }
 
+  @HostListener('window:keydown', ['$event'])
+  onSubmit($event?: KeyboardEvent) {
+    if (!$event || $event.key === 'Enter') {
+      if (this.loginForm.valid) {
+        this.onLogin();
+      }
+    }
+  }
+
   onLogin() {
     const loginData = this.loginForm.value;
-
     this.authService.login(loginData)
       .pipe(
         tap(token => this.authService.setToken(token)),
