@@ -10,6 +10,9 @@ import {RouterModule} from "@angular/router";
 import {CardModule} from "primeng/card";
 import { TableComponent } from './table/table.component';
 import { TableUserComponent } from './table/components/table-user/table-user.component';
+import {CoreModule} from "./core/core.module";
+import {SharedModule} from "./shared/shared.module";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -17,8 +20,11 @@ import { TableUserComponent } from './table/components/table-user/table-user.com
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
+    CoreModule,
+    SharedModule,
     RouterModule
   ],
   providers: [

@@ -32,7 +32,7 @@ export class SignupComponent implements OnInit {
 
     this.authService.signup({...signupData, repeatPassword: null})
       .pipe(
-        tap(token => this.authService.setToken(token)),
+        tap(token => this.authService.setToken(token.access_token)),
         switchMap(() => this.authService.getUser())
       )
       .subscribe(

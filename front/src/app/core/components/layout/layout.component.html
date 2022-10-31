@@ -1,0 +1,25 @@
+<div class="header p-card">
+  <div class="logo">
+    POKER TARANTUL
+  </div>
+  <ng-container *ngIf="user$ | async as userData">
+    <div class="right-menu" *ngIf="userData | is$:'success'">
+      <p-chip styleClass="balance-chip" [label]="userData.value.balance + ' $'"></p-chip>
+      <div class="user-menu" (click)="userMenuRef.toggle($event)">
+        <div class="username">{{ userData.value.username }}</div>
+        <p-avatar icon="pi pi-user"></p-avatar>
+      </div>
+      <p-menu #userMenuRef [popup]="true" [model]="userMenu"></p-menu>
+
+    </div>
+  </ng-container>
+
+  <div class="right-menu" *ngIf="user$ | async | is$:'loading'">
+    <p-skeleton class="balance-chip"></p-skeleton>
+    <div class="user-menu">
+      <p-skeleton class="username" width="5rem" height="2rem"></p-skeleton>
+      <p-skeleton width="2rem" height="2rem"></p-skeleton>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {RoomsService} from "./services/rooms.service";
 import {Room} from "../models/auth.models";
 import {Router} from "@angular/router";
@@ -11,10 +11,13 @@ import {Router} from "@angular/router";
 export class RoomsComponent implements OnInit {
 
   rooms: Room[] = [];
-  constructor(private roomsService: RoomsService, private router: Router) { }
+  constructor(private roomsService: RoomsService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.roomsService.getRooms().subscribe(data => this.rooms = data);
+    this.roomsService.getRooms().subscribe(data => {
+      this.rooms = data
+      this.cdr.detectChanges();
+    });
   }
 
   openRoom(room: Room): void {

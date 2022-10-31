@@ -1,0 +1,30 @@
+.header {
+  height: 4rem;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+
+  .logo {
+    color: white;
+  }
+
+  .right-menu {
+    margin-left: auto;
+    display: flex;
+
+    .user-menu {
+      margin-left: 3rem;
+      display: flex;
+      align-items: center;
+
+      .username {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .p-chip.balance-chip {
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+}

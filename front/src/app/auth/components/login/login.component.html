@@ -8,7 +8,10 @@
       <div>
         <input formControlName="password" pInputText type="password" placeholder="Your password">
       </div>
-      <button (click)="onSubmit()" [disabled]="!loginForm.valid" label="Log in" pButton></button>
+      <div class="error" *ngIf="request$ | async | is$:'error'">
+        Wrong login or password
+      </div>
+      <button (click)="onSubmit()" [loading]="request$ | async | is$:'loading'" [disabled]="!loginForm.valid" label="Log in" pButton></button>
       <div class="signup-hint">
         <span>Don't have an account? <a routerLink="../signup">Sign up!</a></span>
       </div>

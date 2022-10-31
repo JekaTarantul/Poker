@@ -1,33 +1,42 @@
-import {Component, HostBinding, HostListener, isDevMode, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {ChangeDetectionStrategy, Component, HostListener} from '@angular/core';
+import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
-import {switchMap, tap} from "rxjs";
+import {Subject} from "rxjs";
+import {LoadState, LoadStateType} from "../../../utils/load-state.types";
+import {wrap} from "../../../utils/load-state";
+import {AuthToken, LoginModel} from "../../../models/auth.models";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
-  loginForm: FormGroup;
+  loginForm = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+
+  request$ = new Subject<LoadState<AuthToken>>();
 
   constructor(
     private authService: AuthService,
-    private router: Router
-    ) {
-    const devAccountLogin = 'JekaTarantul';
-    const devAccoutPassword = 'privet123';
-
-    this.loginForm = new FormGroup<any>({
-      username: new FormControl(isDevMode() ? devAccountLogin : ''),
-      password: new FormControl(isDevMode() ? devAccoutPassword : '')
-    })
+    private router: Router,
+    private fb: FormBuilder,
+  ) {
+    this.request$.pipe(
+      // untilDestroyed(),
+    ).subscribe(v => this.listenRequest(v));
   }
 
-  ngOnInit(): void {
-
+  listenRequest(data: LoadState<AuthToken>) {
+    switch (data.type) {
+      case LoadStateType.SUCCESS:
+        return this.onSuccess(data.value);
+    }
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -40,19 +49,13 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
-    const loginData = this.loginForm.value;
-    this.authService.login(loginData)
-      .pipe(
-        tap(token => this.authService.setToken(token)),
-        switchMap(() => this.authService.getUser())
-      )
-      .subscribe(
-      data => {
-        this.authService.setUserData(data)
-        console.log(this.authService.currentUser)
-        this.router.navigate(['rooms'])
-      }
-    );
+    const loginData = this.loginForm.value as LoginModel;
+    wrap(this.authService.login(loginData)).subscribe(data => this.request$.next(data));
   }
 
+
+  private onSuccess(data: AuthToken) {
+    this.authService.setToken(data.access_token);
+    this.router.navigate(['rooms']);
+  }
 }
