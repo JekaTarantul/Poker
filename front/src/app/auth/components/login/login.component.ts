@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, HostListener} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
-import {Subject} from "rxjs";
+import {Subject, switchMap, tap} from "rxjs";
 import {LoadState, LoadStateType} from "../../../utils/load-state.types";
 import {wrap} from "../../../utils/load-state";
 import {AuthToken, LoginModel} from "../../../models/auth.models";
@@ -50,7 +50,11 @@ export class LoginComponent {
 
   onLogin() {
     const loginData = this.loginForm.value as LoginModel;
-    wrap(this.authService.login(loginData)).subscribe(data => this.request$.next(data));
+    wrap(this.authService.login(loginData))
+      .pipe(
+        tap(data => this.request$.next(data)),
+        switchMap(() => this.authService.getUser()),
+      ).subscribe(user => this.authService.setUserData(user));
   }
 
 

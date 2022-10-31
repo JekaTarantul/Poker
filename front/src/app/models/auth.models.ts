@@ -17,6 +17,7 @@ export type Room = { id: number, code: string, roomUsers: RoomUser[] };
 export type User = {
   username: string,
   id: number,
+  profilePicture?: string
   rooms: Room[];
 }
 

@@ -6,6 +6,8 @@ import {TableService} from "./services/table.service";
 import {Room, RoomUser} from "../models/auth.models";
 import {AuthService} from "../auth/services/auth.service";
 import {TableSizes, TableUserPlacement, TableUserPlacements} from "./models/table.models";
+import {Socket} from "ngx-socket-io";
+import {SocketService} from "../shared/services/socket.service";
 
 @Component({
   selector: 'app-table',
@@ -29,7 +31,9 @@ export class TableComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute,
               private tableService: TableService,
               private roomsService: RoomsService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private socketService: SocketService
+              ) {
     this.activatedRoute.queryParams.pipe(
       takeUntil(this.destroyed$),
       switchMap(params => this.roomsService.getRoom(params['code'])),
@@ -37,13 +41,17 @@ export class TableComponent implements OnInit, OnDestroy {
     ).subscribe(
       data => {
         this.tableData = data;
-
-        console.log(this.tableData.roomUsers = this.mockUsersData(4))
-        console.log(this.tableData)
-
         this.setUsersPlacement(this.tableData.roomUsers);
+
+        this.socketService.listen('temp').subscribe(
+          data => console.log('ass')
+        )
       }
     )
+  }
+
+  private connectToSocket(code: string): void {
+
   }
 
   private setUsersPlacement(roomUsers: RoomUser[]): void {

@@ -9,9 +9,11 @@ import {AUTH_KEY} from "../../utils/constants";
 export class AuthService {
   private token = this.getToken();
   private _currentUser: User;
+
   get currentUser(): User {
     return this._currentUser || JSON.parse(localStorage.getItem('currentUserData'));
   }
+
   constructor(private http: HttpClient) {}
 
   login(loginData: LoginModel): Observable<AuthToken> {

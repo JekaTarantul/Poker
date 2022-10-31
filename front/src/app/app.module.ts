@@ -13,6 +13,8 @@ import { TableUserComponent } from './table/components/table-user/table-user.com
 import {CoreModule} from "./core/core.module";
 import {SharedModule} from "./shared/shared.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {SocketIoModule} from "ngx-socket-io";
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     HttpClientModule,
     CoreModule,
     SharedModule,
-    RouterModule
+    RouterModule,
+    SocketIoModule.forRoot({url: environment.SOCKET_URL})
   ],
   providers: [
     {
