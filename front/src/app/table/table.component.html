@@ -4,7 +4,7 @@
   <div class="table-container">
     <img src="assets/table.jpg" [width]="tableSizes.width" [height]="tableSizes.height">
 
-    <ng-container *ngIf="tableData?.roomUsers">
+    <ng-container *ngIf="userPlacements.size">
       <ng-container *ngFor="let tableUser of tableData.roomUsers;">
 
       <span class="table-user-wrapper" [ngStyle]="{

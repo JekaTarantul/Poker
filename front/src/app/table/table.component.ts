@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {BehaviorSubject, Observable, of, Subject, switchMap, takeUntil, tap} from "rxjs";
+import {BehaviorSubject, filter, Observable, of, Subject, switchMap, take, takeUntil, tap} from "rxjs";
 import {RoomsService} from "../rooms/services/rooms.service";
 import {TableService} from "./services/table.service";
 import {Room, RoomUser} from "../models/auth.models";
@@ -26,31 +26,15 @@ export class TableComponent implements OnInit, OnDestroy {
     height: 600
   }
 
-  userPlacements: Map<number, TableUserPlacement>;
+  userPlacements: Map<number, TableUserPlacement> = new Map<number, TableUserPlacement>();
 
   constructor(private activatedRoute: ActivatedRoute,
               private tableService: TableService,
               private roomsService: RoomsService,
               private authService: AuthService,
-              private socketService: SocketService
+              private socketService: SocketService,
+              private changeDetector: ChangeDetectorRef
               ) {
-    this.activatedRoute.queryParams.pipe(
-      takeUntil(this.destroyed$),
-      switchMap(params => this.roomsService.getRoom(params['code'])),
-      switchMap(room => this.handleIfRoomJoinRequired(room))
-    ).subscribe(
-      data => {
-        this.tableData = data;
-        this.setUsersPlacement(this.tableData.roomUsers);
-
-        this.socketService.listen('temp').subscribe(
-          data => console.log('ass')
-        )
-      }
-    )
-  }
-
-  private connectToSocket(code: string): void {
 
   }
 
@@ -72,7 +56,7 @@ export class TableComponent implements OnInit, OnDestroy {
     const leftBottom =  {x: 0 + padding, y: this.tableSizes.height - padding};
     const bottomCenter = {x: this.tableSizes.width / 2, y: this.tableSizes.height - padding};
 
-    const currentUserPlacement = map.set(roomUsers[0].id, bottomCenter);
+    map.set(roomUsers[0].id, bottomCenter);
 
     if (roomUsers.length === 2) {
       map.set(roomUsers[1].id, topCenter)
@@ -125,6 +109,8 @@ export class TableComponent implements OnInit, OnDestroy {
 
     this.userPlacements = map;
 
+    this.changeDetector.detectChanges();
+
     console.log(this.userPlacements)
   }
 
@@ -170,20 +156,47 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   handleIfRoomJoinRequired(room: Room): Observable<Room> {
-    console.log('currentUser', this.authService.currentUser)
-    if (room.roomUsers.some(roomUser => roomUser.user.username === this.authService.currentUser.username)) {
-      return of(room)
+
+    if (this.isUserInRoom(room)) {
+      return of(room);
     } else {
       return this.tableService.joinTable(room.code);
     }
   }
 
-  private isUserInRoom(room: Room) {
-
+  private isUserInRoom(room: Room): boolean {
+    return room.roomUsers.some(roomUser => roomUser.user.username === this.authService.currentUser.username)
   }
 
   ngOnInit() {
+    this.activatedRoute.queryParams.pipe(
+      takeUntil(this.destroyed$),
+      switchMap(params => this.roomsService.getRoom(params['code'])),
+      switchMap(room => this.handleIfRoomJoinRequired(room))
+    ).subscribe(
+      data => {
+        this.processRoomData(data);
+        this.socketService.joinRoomSocket(this.tableData.code);
+      }
+    );
 
+    this.subscribeToUsersChange();
+  }
+
+
+  private subscribeToUsersChange(): void {
+    this.socketService.roomData$.pipe(
+      tap(data => console.log(data, this.tableData)),
+      filter(room => !!(room && this.tableData) && (room?.id === this.tableData?.id)),
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      data => this.processRoomData(data)
+    );
+  }
+
+  processRoomData(room: Room) {
+    this.tableData = room;
+    this.setUsersPlacement(this.tableData.roomUsers);
   }
 
   ngOnDestroy() {

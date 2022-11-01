@@ -21,8 +21,6 @@ export class TableUserComponent implements OnInit, OnChanges {
     if (changes.roomUser.currentValue) {
       // @ts-ignore
       this.profilePic = changes.roomUser.currentValue.user.profilePicture || this.defaultProfilePic;
-
-      console.log(this.profilePic)
     }
   }
 

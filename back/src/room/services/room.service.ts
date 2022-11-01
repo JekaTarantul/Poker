@@ -52,7 +52,7 @@ export class RoomService {
 
     const user = await this.userRepository.findOneBy({ username: userToJoin.username });
 
-    const isUserInRoom: boolean = !!room.roomUsers.find((roomUser) => roomUser.user.username === userToJoin.username)
+    const isUserInRoom = !!room.roomUsers.find((roomUser) => roomUser.user.username === userToJoin.username)
 
     if (isUserInRoom) {
       throw new BadRequestException('User already in the room');

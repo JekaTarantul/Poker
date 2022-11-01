@@ -9,11 +9,12 @@ import {
 import { RoomService } from '../services/room.service';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { Room } from '../entities/room.entity';
+import { RoomSocketService } from "../services/room.socket.service";
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/v1/room')
 export class RoomController {
-  constructor(private roomService: RoomService) {}
+  constructor(private roomService: RoomService, private roomSocketService: RoomSocketService) {}
 
   @Get('/rooms')
   getRooms(@Request() req) {
@@ -29,7 +30,9 @@ export class RoomController {
 
   @Post('join/:code')
   async join(@Param() code: { code: number }, @Request() req) {
-    return this.roomService.joinRoom(code.code, req.user);
+    const result: Room = await this.roomService.joinRoom(code.code, req.user);
+
+    return result;
   }
 
   @Post('leave/:code')

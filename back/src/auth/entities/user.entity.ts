@@ -38,4 +38,7 @@ export class User {
 
   @UpdateDateColumn({ select: false })
   updatedAt: string;
+
+  @Column({nullable: true})
+  profilePicture: string
 }

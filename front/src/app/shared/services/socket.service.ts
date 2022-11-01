@@ -1,23 +1,29 @@
 import { Injectable } from '@angular/core';
 import {io} from "socket.io-client";
 import {environment} from "../../../environments/environment";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
+import {SocketEvents} from "../enums/socketEvents/events";
+import {Room, RoomUser} from "../../models/auth.models";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
+  roomData$: BehaviorSubject<Room> = new BehaviorSubject<any>(null);
 
-  constructor() { }
-
-  private socket = io(environment.SOCKET_URL);
-
-  listen(eventName: string) {
-    return new Observable(sub => {
-      this.socket.on(eventName, (data) => {
-        console.log(data || 'no data')
-      })
-    })
+  constructor() {
+    this.listenTempEvent();
   }
 
+  private socket = io(environment.SOCKET_URL, {rejectUnauthorized: false});
+
+  private listenTempEvent() {
+    this.socket.on(SocketEvents.RoomPlayersNumberChanged, data => {
+      this.roomData$.next(data);
+    });
+  }
+
+  joinRoomSocket(code: string) {
+    this.socket.emit(SocketEvents.JoinRoom, code);
+  }
 }
